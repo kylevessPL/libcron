@@ -3,7 +3,7 @@
 
 Logger::Logger(std::string path)
 {
-	this->fs.open(path.data());
+	this->fs.open(path.data(), std::fstream::in | std::fstream::out | std::fstream::app);
 	if (!this->fs.is_open() || !this->fs.good())
 	{
 		throw std::runtime_error(
