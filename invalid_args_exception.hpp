@@ -8,7 +8,7 @@ class InvalidArgsException : public std::runtime_error
 {
  public:
 	InvalidArgsException()
-		: runtime_error("Invalid arguments, run Cron with --help flag to list all available commands")
+		: runtime_error("Invalid arguments, run cron with --help flag to list all available commands")
 	{
 	}
 };

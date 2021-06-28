@@ -11,7 +11,7 @@
 class Task
 {
  public:
-	Task(const std::vector<char*>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time = std::nullopt);
+	Task(const std::vector<std::string>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time = std::nullopt);
 	void schedule();
 	void cancel();
 	int get_id();
@@ -20,13 +20,13 @@ class Task
 	const Time& execution_time;
 	const std::optional<Time>& period_time;
 	const bool rel;
-	const std::vector<char*>& command;
+	const std::vector<std::string>& command;
 	timer_t timer;
 	static void execute(__sigval_t arg);
 	std::chrono::time_point<std::chrono::system_clock> last_execution_time;
 	friend std::ostream& operator<<(std::ostream& os, const Task& task);
 };
 
-inline static int task_count = 1;
+inline static int TASK_COUNT = 1;
 
 #endif //_TASK_HPP_

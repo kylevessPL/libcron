@@ -1,13 +1,13 @@
 #include <algorithm>
-#include "cron.hpp"
+#include "scheduler.hpp"
 
-void Cron::add_task(Task& task)
+void Scheduler::add_task(Task& task)
 {
 	task.schedule();
 	this->tasks.push_back(task);
 }
 
-bool Cron::remove_task(int id)
+bool Scheduler::remove_task(int id)
 {
 	auto it = find_if(this->tasks.begin(), this->tasks.end(), [&id](Task& task)
 	{
@@ -24,12 +24,12 @@ bool Cron::remove_task(int id)
 	return true;
 }
 
-std::vector<Task> Cron::get_tasks()
+std::vector<Task> Scheduler::get_tasks()
 {
 	return this->tasks;
 }
 
-void Cron::exit()
+void Scheduler::exit()
 {
 	std::for_each(this->tasks.begin(), this->tasks.end(), [](Task& task) -> void
 	{

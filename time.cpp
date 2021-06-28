@@ -6,7 +6,7 @@ Time::Time(int hour, int min, int sec) : hour(hour), min(min), sec(sec)
 {
 }
 
-int Time::get_epoch_time() const
+int Time::get_current_epoch_time() const
 {
 	auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	auto tm = std::localtime(&time);

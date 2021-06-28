@@ -9,12 +9,12 @@ Interpreter::Interpreter()
 {
 }
 
-std::string Interpreter::interpret(char* command)
+std::string Interpreter::interpret(char* command, bool& flag)
 {
 	std::deque<std::string> args = split_args(command);
 	if (args.at(0) == "--shutdown")
 	{
-		return handle_exit();
+		return handle_exit(flag);
 	}
 	else if (args.at(0) == "--add")
 	{
@@ -34,12 +34,53 @@ std::string Interpreter::interpret(char* command)
 	{
 		return handle_help();
 	}
-	return "Unknown command, run Cron with --help flag to list all available commands";
+	throw InvalidArgsException();
 }
 
 std::string Interpreter::handle_add_task(std::vector<std::string>& args)
 {
-	return std::__cxx11::string();
+	if (args.empty())
+	{
+		throw InvalidArgsException();
+	}
+
+	Time* period_time;
+	bool rel;
+	auto it = args.begin();
+
+	if (*it == "-r")
+	{
+		rel = true;
+	}
+	it++;
+	if (it == args.end())
+	{
+		throw InvalidArgsException();
+	}
+	Time execution_time = parse_time(*it);
+	it++;
+	if (it == args.end())
+	{
+		throw InvalidArgsException();
+	}
+	if (*it == "-o")
+	{
+		it++;
+		if (it == args.end())
+		{
+			throw InvalidArgsException();
+		}
+		Time time = parse_time(*it);
+		period_time = &time;
+	}
+	it++;
+	if (it == args.end())
+	{
+		throw InvalidArgsException();
+	}
+	Task task = Task(std::vector<std::string>(it, args.end()), execution_time, rel, std::optional<Time>(*period_time));
+	this->scheduler.add_task(task);
+	return "Task scheduled successfully";
 }
 
 std::string Interpreter::handle_remove_task(std::vector<std::string>& args)
@@ -53,7 +94,7 @@ std::string Interpreter::handle_remove_task(std::vector<std::string>& args)
 	{
 		throw InvalidArgsException();
 	}
-	if (!cron.remove_task(id))
+	if (!scheduler.remove_task(id))
 	{
 		return "Task " + std::to_string(id) + " not exists";
 	}
@@ -62,7 +103,7 @@ std::string Interpreter::handle_remove_task(std::vector<std::string>& args)
 
 std::string Interpreter::handle_list()
 {
-	std::vector<Task> tasks = cron.get_tasks();
+	std::vector<Task> tasks = scheduler.get_tasks();
 	if (tasks.empty())
 	{
 		return "No tasks scheduled";
@@ -76,21 +117,22 @@ std::string Interpreter::handle_list()
 std::string Interpreter::handle_help()
 {
 	std::stringstream out;
-	out << "Cron: start Cron" << std::endl;
-	out << "Cron --shutdown: remove_task all tasks and shutdown Cron daemon" << std::endl;
+	out << "Scheduler: start Scheduler" << std::endl;
+	out << "Scheduler --shutdown: remove_task all tasks and shutdown Scheduler daemon" << std::endl;
 	out
-		<< "Cron --add [-r] <h.m.s> [-o <h.m.s>] path [args...]: add_task new Task at specified Time followed by optional offset"
+		<< "Scheduler --add [-r] <h.m.s> [-o <h.m.s>] path [args...]: add_task new Task at specified Time followed by optional offset"
 		<< std::endl;
-	out << "Cron --remove <id>: remove_task Task by id" << std::endl;
-	out << "Cron --list: list all scheduled tasks" << std::endl;
-	out << "Cron --help: list available commands" << std::endl;
+	out << "Scheduler --remove <id>: remove_task Task by id" << std::endl;
+	out << "Scheduler --list: list all scheduled tasks" << std::endl;
+	out << "Scheduler --help: list available commands" << std::endl;
 	return out.str();
 }
 
-std::string Interpreter::handle_exit()
+std::string Interpreter::handle_exit(bool& flag)
 {
-	cron.exit();
-	return "Cron daemon shut down";
+	scheduler.exit();
+	flag = 1;
+	return "Scheduler daemon shut down";
 }
 
 std::deque<std::string> Interpreter::split_args(char* command)
@@ -102,4 +144,16 @@ std::deque<std::string> Interpreter::split_args(char* command)
 	std::copy(args.begin(), args.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
 	args.pop_front();
 	return args;
+}
+
+Time Interpreter::parse_time(std::string time_str)
+{
+	int hour;
+	int min;
+	int sec;
+	if (std::sscanf(time_str.data(), "%u.%u.%u", &hour, &min, &sec) != 3)
+	{
+		throw InvalidArgsException();
+	}
+	return Time(hour, min, sec);
 }

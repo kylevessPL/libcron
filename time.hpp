@@ -7,13 +7,13 @@ class Time
 {
  public:
 	Time(int hour, int min, int sec);
-	int get_epoch_time() const;
+	int get_current_epoch_time() const;
 	int get_total_sec() const;
 	operator std::string() const;
  private:
-	const int hour;
-	const int min;
-	const int sec;
+	int hour;
+	int min;
+	int sec;
 	friend std::ostream& operator<<(std::ostream& os, const Time& time);
 };
 

@@ -5,8 +5,8 @@
 #include "task.hpp"
 #include "utils.hpp"
 
-Task::Task(const std::vector<char*>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time)
-	: id(task_count++), execution_time(execution_time), period_time(period_time), rel(rel), command(command)
+Task::Task(const std::vector<std::string>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time)
+	: id(TASK_COUNT++), execution_time(execution_time), period_time(period_time), rel(rel), command(command)
 {
 }
 
@@ -14,8 +14,8 @@ void Task::schedule()
 {
 	struct itimerspec timer_time;
 	timer_time.it_value.tv_sec = this->rel ? this->execution_time.get_total_sec()
-										   : this->execution_time.get_epoch_time();
-	timer_time.it_interval.tv_sec = this->period_time->get_total_sec();
+										   : this->execution_time.get_current_epoch_time();
+	timer_time.it_interval.tv_sec = this->period_time.has_value() ? this->period_time->get_total_sec() : 0;
 
 	struct sigevent timer_event;
 	timer_event.sigev_notify = SIGEV_THREAD;
@@ -26,7 +26,7 @@ void Task::schedule()
 		timer_create(CLOCK_REALTIME, &timer_event, &timer) == -1 ||
 		timer_settime(timer, this->rel ? 0 : TIMER_ABSTIME, &timer_time, nullptr) == -1)
 	{
-		throw std::runtime_error("There was a problem executing task: " + std::string(std::strerror(errno)));
+		throw std::runtime_error("There was an error executing task: " + std::string(std::strerror(errno)));
 	}
 }
 
@@ -34,7 +34,7 @@ void Task::cancel()
 {
 	if (timer_delete(timer) == -1)
 	{
-		throw std::runtime_error("There was a problem cancelling task: " + std::string(std::strerror(errno)));
+		throw std::runtime_error("There was an error cancelling task: " + std::string(std::strerror(errno)));
 	}
 }
 
@@ -46,11 +46,13 @@ int Task::get_id()
 void Task::execute(__sigval_t arg)
 {
 	auto task = static_cast<Task*>(arg.sival_ptr);
+
+	std::vector<char*> data = Utils::vec_str_to_char_ptr(task->command, task->command.size(), 1);
+
 	pid_t pid;
-	if (posix_spawn(&pid, task->command.at(0), nullptr, nullptr, std::vector<char*>(
-		task->command.begin() + 1, task->command.end()).data(), nullptr) == -1)
+	if (posix_spawn(&pid, task->command.at(0).data(), nullptr, nullptr, data.data(), nullptr) == -1)
 	{
-		throw std::runtime_error("There was a problem executing task: " + std::string(std::strerror(errno)));
+		throw std::runtime_error("There was an error executing task: " + std::string(std::strerror(errno)));
 	}
 	task->last_execution_time = std::chrono::system_clock::now();
 }

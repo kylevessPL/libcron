@@ -1,10 +1,10 @@
-#ifndef _CRON_HPP_
-#define _CRON_HPP_
+#ifndef _SCHEDULER_HPP_
+#define _SCHEDULER_HPP_
 
 #include <vector>
 #include "task.hpp"
 
-class Cron
+class Scheduler
 {
  public:
 	void add_task(Task& task);
@@ -15,4 +15,4 @@ class Cron
 	std::vector<Task> tasks;
 };
 
-#endif //_CRON_HPP_
+#endif //_SCHEDULER_HPP_

@@ -3,11 +3,12 @@
 #include <sys/mman.h>
 #include <thread>
 #include <algorithm>
+#include <cstring>
 #include "query.hpp"
 #include "client.hpp"
 #include "invalid_args_exception.hpp"
 
-void Client::start(int size, char** args)
+std::string Client::start(int size, char** args)
 {
 	mqd_t query_queue;
 	do
@@ -25,29 +26,36 @@ void Client::start(int size, char** args)
 	query.shm_size = command.length() + 1;
 
 	auto shm_id = static_cast<mqd_t>(shm_open(query.shm_name, O_RDWR | O_CREAT, 0777));
+	if (shm_id == -1)
+	{
+		throw std::runtime_error("There was an error initializing shared memory: " + std::string(std::strerror(errno)));
+	}
+
 	ftruncate(shm_id, query.shm_size);
 	auto query_msg = static_cast<char*>(mmap(0, query.shm_size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_id, 0));
-
 	if (query_msg == MAP_FAILED)
 	{
-		throw std::runtime_error("Mem alloc error");
+		throw std::runtime_error("There was an error allocating memory: " + std::string(std::strerror(errno)));
 	}
 
 	sprintf(query_msg, "%s", command.data());
 
 	mq_send(query_queue, (const char*) &query, sizeof(struct query_t), 0);
 
-	char response[2000];
+	char res[2000];
 
 	struct mq_attr attr;
 	attr.mq_maxmsg = 10;
-	attr.mq_msgsize = sizeof(response);
+	attr.mq_msgsize = sizeof(res);
 	attr.mq_flags = 0;
 
 	auto response_queue = static_cast<mqd_t>(mq_open(query.response_queue_name, O_CREAT | O_RDONLY, 0644, &attr));
-	mq_receive(response_queue, response, sizeof(response), NULL);
+	if (response_queue == -1)
+	{
+		throw std::runtime_error("There was an error initializing message queue: " + std::string(std::strerror(errno)));
+	}
 
-	std::cout << response << std::endl;
+	mq_receive(response_queue, res, sizeof(res), NULL);
 
 	mq_close(query_queue);
 	mq_close(response_queue);
@@ -56,6 +64,8 @@ void Client::start(int size, char** args)
 	munmap(query_msg, query.shm_size);
 	close(shm_id);
 	shm_unlink(query.shm_name);
+
+	return res;
 }
 
 std::string Client::join_arguments(int size, char** args)
