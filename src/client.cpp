@@ -1,13 +1,13 @@
-#include <mqueue.h>
-#include <unistd.h>
-#include <sys/mman.h>
 #include <thread>
 #include <algorithm>
 #include <cstring>
-#include "query.hpp"
-#include "client.hpp"
-#include "invalid_args_exception.hpp"
+#include <mqueue.h>
+#include <unistd.h>
+#include <sys/mman.h>
 #include <fcntl.h>
+#include <query.hpp>
+#include <client.hpp>
+#include <invalid_args_exception.hpp>
 
 std::string Client::start(int size, char** args)
 {

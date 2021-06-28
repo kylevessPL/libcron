@@ -1,6 +1,6 @@
 #include <sstream>
 #include <chrono>
-#include "time.hpp"
+#include <time.hpp>
 
 Time::Time(int hour, int min, int sec) : hour(hour), min(min), sec(sec)
 {

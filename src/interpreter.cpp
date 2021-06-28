@@ -1,8 +1,8 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include "interpreter.hpp"
-#include "invalid_args_exception.hpp"
+#include <interpreter.hpp>
+#include <invalid_args_exception.hpp>
 
 Interpreter::Interpreter()
 {

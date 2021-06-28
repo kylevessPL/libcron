@@ -1,7 +1,7 @@
 #ifndef _CLIENT_HPP_
 #define _CLIENT_HPP_
 
-#include "query.hpp"
+#include <query.hpp>
 
 class Client
 {

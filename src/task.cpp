@@ -1,8 +1,8 @@
-#include <spawn.h>
 #include <algorithm>
 #include <cstring>
-#include "task.hpp"
-#include "utils.hpp"
+#include <spawn.h>
+#include <task.hpp>
+#include <utils.hpp>
 
 Task::Task(std::vector<std::string> command, Time execution_time, bool rel, Time period_time)
 	: id(TASK_COUNT++), execution_time(execution_time), rel(rel), period_time(period_time), command(command)

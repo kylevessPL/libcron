@@ -1,12 +1,12 @@
 #include <mqueue.h>
 #include <unistd.h>
 #include <functional>
-#include <sys/mman.h>
-#include <sys/wait.h>
 #include <thread>
 #include <cstring>
-#include "server.hpp"
-#include "query.hpp"
+#include <sys/mman.h>
+#include <sys/wait.h>
+#include <server.hpp>
+#include <query.hpp>
 
 void Server::start()
 {

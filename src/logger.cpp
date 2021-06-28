@@ -1,5 +1,5 @@
 #include <cstring>
-#include "logger.hpp"
+#include <logger.hpp>
 
 Logger::Logger(std::string path)
 {

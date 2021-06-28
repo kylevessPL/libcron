@@ -1,7 +1,7 @@
 #ifndef _SERVER_HPP_
 #define _SERVER_HPP_
 
-#include "interpreter.hpp"
+#include <interpreter.hpp>
 
 class Server
 {

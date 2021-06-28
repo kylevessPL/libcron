@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "utils.hpp"
+#include <utils.hpp>
 
 std::string Utils::pretty_print_chrono_time(const std::chrono::time_point<std::chrono::system_clock> time_point)
 {
