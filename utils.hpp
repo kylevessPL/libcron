@@ -8,7 +8,7 @@
 class Utils
 {
  public:
-	static std::string pretty_print_chrono_time(const std::chrono::time_point<std::chrono::system_clock>& time_point);
+	static std::string pretty_print_chrono_time(const std::chrono::time_point<std::chrono::system_clock> time_point);
 	static std::vector<char*> vec_str_to_char_ptr(std::vector<std::string> vec, unsigned int to, unsigned int from = 0);
 };
 

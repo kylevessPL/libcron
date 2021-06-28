@@ -1,12 +1,11 @@
 #include <spawn.h>
 #include <algorithm>
 #include <cstring>
-#include <csignal>
 #include "task.hpp"
 #include "utils.hpp"
 
-Task::Task(const std::vector<std::string>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time)
-	: id(TASK_COUNT++), execution_time(execution_time), period_time(period_time), rel(rel), command(command)
+Task::Task(std::vector<std::string> command, Time execution_time, bool rel, Time period_time)
+	: id(TASK_COUNT++), execution_time(execution_time), rel(rel), period_time(period_time), command(command)
 {
 }
 
@@ -15,7 +14,7 @@ void Task::schedule()
 	struct itimerspec timer_time;
 	timer_time.it_value.tv_sec = this->rel ? this->execution_time.get_total_sec()
 										   : this->execution_time.get_current_epoch_time();
-	timer_time.it_interval.tv_sec = this->period_time.has_value() ? this->period_time->get_total_sec() : 0;
+	timer_time.it_interval.tv_sec = this->period_time.get_total_sec();
 
 	struct sigevent timer_event;
 	timer_event.sigev_notify = SIGEV_THREAD;
@@ -63,5 +62,5 @@ std::ostream& operator<<(std::ostream& os, const Task& task)
 			  << (task.last_execution_time.time_since_epoch().count() == 0 ? "undefined"
 																		   : Utils::pretty_print_chrono_time(task.last_execution_time))
 			  << ", repeatable: "
-			  << (task.period_time.has_value() ? ("every " + std::string(task.period_time.value())) : "no");
+			  << (task.period_time.get_total_sec() != 0 ? ("every " + std::string(task.period_time)) : "no");
 }

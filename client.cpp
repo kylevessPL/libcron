@@ -7,6 +7,7 @@
 #include "query.hpp"
 #include "client.hpp"
 #include "invalid_args_exception.hpp"
+#include <fcntl.h>
 
 std::string Client::start(int size, char** args)
 {

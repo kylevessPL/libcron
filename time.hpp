@@ -6,7 +6,7 @@
 class Time
 {
  public:
-	Time(int hour, int min, int sec);
+	Time(int hour = 0, int min = 0, int sec = 0);
 	int get_current_epoch_time() const;
 	int get_total_sec() const;
 	operator std::string() const;

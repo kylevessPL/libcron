@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <deque>
 #include "scheduler.hpp"
 
 class Interpreter
@@ -11,8 +12,8 @@ class Interpreter
 	Interpreter();
 	std::string interpret(char* command, bool& flag);
  private:
-	std::string handle_add_task(std::vector<std::string>& args);
-	std::string handle_remove_task(std::vector<std::string>& args);
+	std::string handle_add_task(std::vector<std::string> args);
+	std::string handle_remove_task(std::vector<std::string> args);
 	std::string handle_list();
 	std::string handle_help();
 	std::string handle_exit(bool& flag);

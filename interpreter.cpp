@@ -1,7 +1,6 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
-#include <deque>
 #include "interpreter.hpp"
 #include "invalid_args_exception.hpp"
 
@@ -37,14 +36,14 @@ std::string Interpreter::interpret(char* command, bool& flag)
 	throw InvalidArgsException();
 }
 
-std::string Interpreter::handle_add_task(std::vector<std::string>& args)
+std::string Interpreter::handle_add_task(std::vector<std::string> args)
 {
 	if (args.empty())
 	{
 		throw InvalidArgsException();
 	}
 
-	Time* period_time;
+	Time period_time;
 	bool rel;
 	auto it = args.begin();
 
@@ -70,20 +69,19 @@ std::string Interpreter::handle_add_task(std::vector<std::string>& args)
 		{
 			throw InvalidArgsException();
 		}
-		Time time = parse_time(*it);
-		period_time = &time;
+		period_time = parse_time(*it);
 	}
 	it++;
 	if (it == args.end())
 	{
 		throw InvalidArgsException();
 	}
-	Task task = Task(std::vector<std::string>(it, args.end()), execution_time, rel, std::optional<Time>(*period_time));
+	Task task = Task(std::vector<std::string>(it, args.end()), execution_time, rel, period_time);
 	this->scheduler.add_task(task);
 	return "Task scheduled successfully";
 }
 
-std::string Interpreter::handle_remove_task(std::vector<std::string>& args)
+std::string Interpreter::handle_remove_task(std::vector<std::string> args)
 {
 	int id;
 	try

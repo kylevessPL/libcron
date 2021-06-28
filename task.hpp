@@ -6,21 +6,22 @@
 #include <chrono>
 #include <vector>
 #include <time.h>
+#include <csignal>
 #include "time.hpp"
 
 class Task
 {
  public:
-	Task(const std::vector<std::string>& command, const Time& execution_time, const bool rel, const std::optional<Time>& period_time = std::nullopt);
+	Task(std::vector<std::string> command, Time execution_time, bool rel, Time period_time);
 	void schedule();
 	void cancel();
 	int get_id();
  private:
-	const int id;
-	const Time& execution_time;
-	const std::optional<Time>& period_time;
-	const bool rel;
-	const std::vector<std::string>& command;
+	int id;
+	Time execution_time;
+	Time period_time;
+	bool rel;
+	std::vector<std::string> command;
 	timer_t timer;
 	static void execute(__sigval_t arg);
 	std::chrono::time_point<std::chrono::system_clock> last_execution_time;
