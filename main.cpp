@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 	{
 		if (argc != 1)
 		{
-			std::cerr << "Scheduler daemon not yet running" << std::endl;
+			std::cerr << "Cron not yet running" << std::endl;
 			return EXIT_FAILURE;
 		}
 		try
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 	{
 		if (argc == 1)
 		{
-			std::cerr << "Scheduler daemon already running" << std::endl;
+			std::cerr << "Cron already running" << std::endl;
 			return EXIT_FAILURE;
 		}
 		try

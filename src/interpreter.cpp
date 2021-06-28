@@ -115,14 +115,14 @@ std::string Interpreter::handle_list()
 std::string Interpreter::handle_help()
 {
 	std::stringstream out;
-	out << "Scheduler: start Scheduler" << std::endl;
-	out << "Scheduler --shutdown: remove_task all tasks and shutdown Scheduler daemon" << std::endl;
+	out << "cron: start cron" << std::endl;
+	out << "cron --shutdown: cancel all tasks and shutdown cron" << std::endl;
 	out
-		<< "Scheduler --add [-r] <h.m.s> [-o <h.m.s>] path [args...]: add_task new Task at specified Time followed by optional offset"
+		<< "cron --add [-r] <h.m.s> [-o <h.m.s>] path [args...]: schedule new task at specified time followed by optional offset"
 		<< std::endl;
-	out << "Scheduler --remove <id>: remove_task Task by id" << std::endl;
-	out << "Scheduler --list: list all scheduled tasks" << std::endl;
-	out << "Scheduler --help: list available commands" << std::endl;
+	out << "cron --remove <id>: cancel task by id" << std::endl;
+	out << "cron --list: list all scheduled tasks" << std::endl;
+	out << "cron --help: list available commands" << std::endl;
 	return out.str();
 }
 
@@ -130,7 +130,7 @@ std::string Interpreter::handle_exit(bool& flag)
 {
 	scheduler.exit();
 	flag = 1;
-	return "Scheduler daemon shut down";
+	return "Cron shut down";
 }
 
 std::deque<std::string> Interpreter::split_args(char* command)
