@@ -1,7 +1,11 @@
 #include <cstring>
 #include <logger.hpp>
 
-Logger::Logger(std::string path)
+Logger::Logger()
+{
+}
+
+void Logger::init(std::string path)
 {
 	this->fs.open(path.data(), std::fstream::in | std::fstream::out | std::fstream::app);
 	if (!this->fs.is_open() || !this->fs.good())
@@ -24,5 +28,3 @@ std::string Logger::get_sv_str(Logger::Severity sv)
 		   ? "MIN"
 		   : sv == 1 ? "STANDARD" : "MAX";
 }
-
-

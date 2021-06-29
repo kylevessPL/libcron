@@ -14,8 +14,9 @@ add_library(scheduler src/scheduler.cpp include/scheduler.hpp)
 add_library(task src/task.cpp include/task.hpp)
 add_library(time src/time.cpp include/time.hpp)
 add_library(utils src/utils.cpp include/utils.hpp)
+add_library(lock src/lock.cpp include/lock.hpp)
 add_library(logger src/logger.cpp include/logger.hpp)
 
 add_executable(project main.cpp)
 
-target_link_libraries(project ${CMAKE_THREAD_LIBS_INIT} rt client server interpreter scheduler task time utils logger)
+target_link_libraries(project ${CMAKE_THREAD_LIBS_INIT} rt client server interpreter scheduler task time utils lock logger)

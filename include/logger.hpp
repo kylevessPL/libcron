@@ -8,7 +8,8 @@
 class Logger
 {
  public:
-	Logger(std::string path);
+	Logger();
+	void init(std::string path);
 	enum Severity
 	{
 		min,
