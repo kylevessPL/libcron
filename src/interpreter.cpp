@@ -4,10 +4,6 @@
 #include <interpreter.hpp>
 #include <invalid_args_exception.hpp>
 
-Interpreter::Interpreter()
-{
-}
-
 std::string Interpreter::interpret(char* command, bool& flag)
 {
 	std::vector<std::string> args = split_args(command);
@@ -122,7 +118,7 @@ std::string Interpreter::handle_help()
 		<< std::endl;
 	out << "cron --remove <id>: cancel task by id" << std::endl;
 	out << "cron --list: list all scheduled tasks" << std::endl;
-	out << "cron --help: list available commands" << std::endl;
+	out << "cron --help: list available commands";
 	return out.str();
 }
 

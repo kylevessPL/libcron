@@ -8,7 +8,6 @@
 class Interpreter
 {
  public:
-	Interpreter();
 	std::string interpret(char* command, bool& flag);
  private:
 	std::string handle_add_task(std::vector<std::string> args);

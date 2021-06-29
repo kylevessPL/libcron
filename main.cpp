@@ -34,10 +34,12 @@ int main(int argc, char** argv)
 
 			Lock::create_lock(PIDFILE_PATH);
 			mq_unlink("/mq_queries_queue");
+
 			std::cout << "Cron service running" << std::endl;
 			logger.log(Logger::Severity::min, "Cron service started");
-
 			Server::start();
+			std::cout << "Cron service shut down" << std::endl;
+			logger.log(Logger::Severity::min, "Cron service stopped");
 		}
 		else
 		{
@@ -47,16 +49,8 @@ int main(int argc, char** argv)
 				return EXIT_FAILURE;
 			}
 
-			std::string res = Client::start(argc, argv);
-			std::cout << res << std::endl;
-			logger.log(Logger::Severity::min, res);
+			Client::start(argc, argv);
 		}
-	}
-	catch (InvalidArgsException e)
-	{
-		std::cerr << e.what() << std::endl;
-		logger.log(Logger::Severity::standard, e.what());
-		return EXIT_FAILURE;
 	}
 	catch (std::runtime_error e)
 	{

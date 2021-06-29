@@ -53,6 +53,7 @@ void Task::execute(__sigval_t arg)
 	{
 		throw std::runtime_error("There was an error executing task: " + std::string(std::strerror(errno)));
 	}
+
 	task->last_execution_time = std::chrono::system_clock::now();
 }
 

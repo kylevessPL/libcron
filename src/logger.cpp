@@ -1,10 +1,6 @@
 #include <cstring>
 #include <logger.hpp>
 
-Logger::Logger()
-{
-}
-
 void Logger::init(std::string path)
 {
 	this->fs.open(path.data(), std::fstream::in | std::fstream::out | std::fstream::app);

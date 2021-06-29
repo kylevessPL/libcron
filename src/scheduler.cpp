@@ -1,10 +1,12 @@
 #include <algorithm>
 #include <scheduler.hpp>
+#include <utils.hpp>
 
 void Scheduler::add_task(Task& task)
 {
 	task.schedule();
 	this->tasks.push_back(task);
+	logger.log(Logger::Severity::standard, "New task added");
 }
 
 bool Scheduler::remove_task(int id)
@@ -21,6 +23,7 @@ bool Scheduler::remove_task(int id)
 	int idx = std::distance(this->tasks.begin(), it);
 	this->tasks.at(idx).cancel();
 	this->tasks.erase(it);
+	logger.log(Logger::Severity::standard, "Task " + std::to_string(it->get_id()) + " added");
 	return true;
 }
 
@@ -37,4 +40,10 @@ void Scheduler::exit()
 	  delete &task;
 	});
 	this->tasks.clear();
+	logger.log(Logger::Severity::standard, "All tasks cancelled");
+}
+
+Scheduler::Scheduler()
+{
+	logger.init(LOG_PATH);
 }

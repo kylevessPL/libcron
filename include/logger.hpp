@@ -8,13 +8,10 @@
 class Logger
 {
  public:
-	Logger();
 	void init(std::string path);
 	enum Severity
 	{
-		min,
-		standard,
-		max
+		min, standard, max
 	};
 	void log(Severity sv, std::string msg);
  private:

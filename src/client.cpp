@@ -9,7 +9,7 @@
 #include <client.hpp>
 #include <invalid_args_exception.hpp>
 
-std::string Client::start(int size, char** args)
+void Client::start(int size, char** args)
 {
 	mqd_t query_queue;
 	do
@@ -66,7 +66,7 @@ std::string Client::start(int size, char** args)
 	close(shm_id);
 	shm_unlink(query.shm_name);
 
-	return res;
+	std::cout << res << std::endl;
 }
 
 std::string Client::join_arguments(int size, char** args)

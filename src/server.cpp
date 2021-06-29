@@ -6,6 +6,7 @@
 #include <sys/mman.h>
 #include <server.hpp>
 #include <query.hpp>
+#include <invalid_args_exception.hpp>
 
 void Server::start()
 {
@@ -53,7 +54,15 @@ void Server::handle_query(mqd_t& query_queue)
 		  }
 
 		  bool flag;
-		  std::string res = interp.interpret(command, flag);
+		  std::string res;
+		  try
+		  {
+			  res = interp.interpret(command, flag);
+		  }
+		  catch (InvalidArgsException e)
+		  {
+			  res = e.what();
+		  }
 
 		  munmap(command, sizeof(command));
 		  close(shm_id);

@@ -6,7 +6,7 @@
 class Client
 {
  public:
-	static std::string start(int size, char** args);
+	static void start(int size, char** args);
  private:
 	static std::string join_arguments(int size, char** args);
 };
