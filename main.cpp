@@ -20,8 +20,6 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	mq_unlink("/mq_queries_queue");
-
 	try
 	{
 		bool lock_status = Lock::is_locked(PIDFILE_PATH);
@@ -35,6 +33,7 @@ int main(int argc, char** argv)
 			}
 
 			Lock::create_lock(PIDFILE_PATH);
+			mq_unlink("/mq_queries_queue");
 			std::cout << "Cron service running" << std::endl;
 			logger.log(Logger::Severity::min, "Cron service started");
 

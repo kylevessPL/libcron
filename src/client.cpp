@@ -14,7 +14,7 @@ std::string Client::start(int size, char** args)
 	mqd_t query_queue;
 	do
 	{
-		query_queue = static_cast<mqd_t>(mq_open("/mq_queries_queue", O_WRONLY));
+		query_queue = mq_open("/mq_queries_queue", O_WRONLY);
 		sleep(1);
 	} while (query_queue == -1);
 
@@ -24,9 +24,9 @@ std::string Client::start(int size, char** args)
 
 	sprintf(query.response_queue_name, "/mq_reply_queue_%d", getpid());
 	sprintf(query.shm_name, "/shared_memory_%d", getpid());
-	query.shm_size = command.length() + 1;
+	query.shm_size = sizeof(command);
 
-	auto shm_id = static_cast<mqd_t>(shm_open(query.shm_name, O_RDWR | O_CREAT, 0777));
+	auto shm_id = shm_open(query.shm_name, O_RDWR | O_CREAT, 0777);
 	if (shm_id == -1)
 	{
 		throw std::runtime_error("There was an error initializing shared memory: " + std::string(std::strerror(errno)));
@@ -50,7 +50,7 @@ std::string Client::start(int size, char** args)
 	attr.mq_msgsize = sizeof(res);
 	attr.mq_flags = 0;
 
-	auto response_queue = static_cast<mqd_t>(mq_open(query.response_queue_name, O_CREAT | O_RDONLY, 0644, &attr));
+	auto response_queue = mq_open(query.response_queue_name, O_CREAT | O_RDONLY, 0644, &attr);
 	if (response_queue == -1)
 	{
 		throw std::runtime_error("There was an error initializing message queue: " + std::string(std::strerror(errno)));

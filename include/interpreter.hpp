@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <deque>
 #include <scheduler.hpp>
 
 class Interpreter
@@ -18,7 +17,7 @@ class Interpreter
 	std::string handle_help();
 	std::string handle_exit(bool& flag);
 	Time parse_time(std::string time_str);
-	std::deque<std::string> split_args(char* command);
+	std::vector<std::string> split_args(char* command);
 	Scheduler scheduler;
 };
 

@@ -13,6 +13,6 @@ class Utils
 };
 
 inline static const std::string LOG_PATH = "cron.log";
-inline static const std::string PIDFILE_PATH = "/var/run/cron_alt.pid";
+inline static const std::string PIDFILE_PATH = "/var/run/cron.pid";
 
 #endif //_UTILS_HPP_

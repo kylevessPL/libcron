@@ -10,7 +10,7 @@ Interpreter::Interpreter()
 
 std::string Interpreter::interpret(char* command, bool& flag)
 {
-	std::deque<std::string> args = split_args(command);
+	std::vector<std::string> args = split_args(command);
 	if (args.at(0) == "--shutdown")
 	{
 		return handle_exit(flag);
@@ -130,17 +130,13 @@ std::string Interpreter::handle_exit(bool& flag)
 {
 	scheduler.exit();
 	flag = 1;
-	return "Cron shut down";
+	return "Cron service stopped";
 }
 
-std::deque<std::string> Interpreter::split_args(char* command)
+std::vector<std::string> Interpreter::split_args(char* command)
 {
-	std::stringstream ss(command);
-	std::istream_iterator<std::string> begin(ss);
-	std::istream_iterator<std::string> end;
-	std::deque<std::string> args(begin, end);
-	std::copy(args.begin(), args.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
-	args.pop_front();
+	std::istringstream ss(command);
+	std::vector<std::string> args((std::istream_iterator<std::string>(ss)), std::istream_iterator<std::string>());
 	return args;
 }
 
