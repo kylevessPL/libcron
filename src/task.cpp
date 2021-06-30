@@ -7,6 +7,7 @@
 Task::Task(std::vector<std::string> command, Time execution_time, bool rel, Time period_time)
 	: id(TASK_COUNT++), execution_time(execution_time), rel(rel), period_time(period_time), command(command)
 {
+	logger.init(LOG_PATH);
 }
 
 void Task::schedule()
@@ -27,6 +28,8 @@ void Task::schedule()
 	{
 		throw std::runtime_error("There was an error scheduling task: " + std::string(std::strerror(errno)));
 	}
+
+	logger.log(Logger::Severity::standard, "New task scheduled");
 }
 
 void Task::cancel()
@@ -35,6 +38,8 @@ void Task::cancel()
 	{
 		throw std::runtime_error("There was an error cancelling task: " + std::string(std::strerror(errno)));
 	}
+
+	logger.log(Logger::Severity::standard, "Task " + std::to_string(this->get_id()) + " cancelled");
 }
 
 void Task::execute()
@@ -48,6 +53,7 @@ void Task::execute()
 	}
 
 	this->last_execution_time = std::chrono::system_clock::now();
+	logger.log(Logger::Severity::standard, "Task " + std::to_string(this->get_id()) + " executed");
 }
 
 int Task::get_id()

@@ -15,7 +15,6 @@ void Scheduler::add_task(std::vector<std::string> command, Time execution_time, 
 		throw;
 	}
 	this->tasks.push_back(task);
-	logger.log(Logger::Severity::standard, "New task scheduled");
 }
 
 bool Scheduler::remove_task(int id)
@@ -33,7 +32,6 @@ bool Scheduler::remove_task(int id)
 	auto task = this->tasks.at(idx);
 	task->cancel();
 	this->tasks.erase(it);
-	logger.log(Logger::Severity::standard, "Task " + std::to_string(task->get_id()) + " cancelled");
 	return true;
 }
 
@@ -50,10 +48,4 @@ void Scheduler::exit()
 	  delete task;
 	});
 	this->tasks.clear();
-	logger.log(Logger::Severity::standard, "All tasks cancelled");
-}
-
-Scheduler::Scheduler()
-{
-	logger.init(LOG_PATH);
 }

@@ -8,6 +8,7 @@
 #include <time.h>
 #include <csignal>
 #include <time.hpp>
+#include "logger.hpp"
 
 class Task
 {
@@ -24,6 +25,7 @@ class Task
 	bool rel;
 	std::vector<std::string> command;
 	timer_t timer;
+	Logger logger;
 	static void callback(sigval_t arg);
 	std::chrono::time_point<std::chrono::system_clock> last_execution_time;
 	friend std::ostream& operator<<(std::ostream& os, const Task& task);
