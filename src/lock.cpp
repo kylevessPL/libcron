@@ -17,7 +17,7 @@ void Lock::create_lock(std::string pid_file)
 	if (fcntl(pid_fd, F_SETLK, &pid_lck) == -1)
 	{
 		close(pid_fd);
-		throw std::runtime_error("There was an error locking PID file: " + std::string(std::strerror(errno)));
+		throw std::runtime_error("There was an error setting PID file lock: " + std::string(std::strerror(errno)));
 	}
 
 	char pid_lock_buf[11];
@@ -29,16 +29,16 @@ bool Lock::is_locked(std::string pid_file)
 {
 	struct flock pid_lck = { F_WRLCK, SEEK_SET, 0, 0, 0 };
 
-	int pid_fd = open(pid_file.data(), O_CREAT | O_WRONLY, 0640);
+	int pid_fd = open(pid_file.data(), O_RDONLY, 0640);
 	if (pid_fd == -1)
 	{
-		throw std::runtime_error("There was an error opening PID file: " + std::string(std::strerror(errno)));
+		return false;
 	}
 
 	if (fcntl(pid_fd, F_GETLK, &pid_lck) == -1)
 	{
 		close(pid_fd);
-		throw std::runtime_error("There was an error locking PID file: " + std::string(std::strerror(errno)));
+		throw std::runtime_error("There was an error reading PID file lock status: " + std::string(std::strerror(errno)));
 	}
 
 	close(pid_fd);
