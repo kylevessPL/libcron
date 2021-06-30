@@ -7,13 +7,13 @@ std::string Utils::pretty_print_chrono_time(const std::chrono::time_point<std::c
 	return std::ctime(&t);
 }
 
-std::vector<char*> Utils::vec_str_to_char_ptr(std::vector<std::string> vec, unsigned int to, unsigned int from)
+std::vector<char*> Utils::vec_str_to_char(std::vector<std::string> vec)
 {
-	std::vector<char*> data;
-	data.resize(to - from, nullptr);
-	std::transform(vec.begin() + from, vec.end() - (vec.size() - to), std::begin(data), [&](std::string& str)
+	std::vector<char*> arr;
+	for (int i = 0; i < vec.size(); ++i)
 	{
-	  return str.data();
-	});
-	return data;
+		arr.push_back(vec[i].data());
+	}
+	arr.push_back(nullptr);
+	return arr;
 }

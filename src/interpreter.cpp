@@ -66,14 +66,13 @@ std::string Interpreter::handle_add_task(std::vector<std::string> args)
 			throw InvalidArgsException();
 		}
 		period_time = parse_time(*it);
+		it++;
 	}
-	it++;
 	if (it == args.end())
 	{
 		throw InvalidArgsException();
 	}
-	Task task = Task(std::vector<std::string>(it, args.end()), execution_time, rel, period_time);
-	this->scheduler.add_task(task);
+	this->scheduler.add_task(std::vector<std::string>(it, args.end()), execution_time, rel, period_time);
 	return "Task scheduled successfully";
 }
 
@@ -82,7 +81,7 @@ std::string Interpreter::handle_remove_task(std::vector<std::string> args)
 	int id;
 	try
 	{
-		id = std::stoi(args.at(1));
+		id = std::stoi(args.at(0));
 	}
 	catch (std::exception e)
 	{
@@ -97,14 +96,14 @@ std::string Interpreter::handle_remove_task(std::vector<std::string> args)
 
 std::string Interpreter::handle_list()
 {
-	std::vector<Task> tasks = scheduler.get_tasks();
+	std::vector<Task*> tasks = scheduler.get_tasks();
 	if (tasks.empty())
 	{
 		return "No tasks scheduled";
 	}
 	std::stringstream out;
-	std::for_each(tasks.begin(), tasks.end(), [&out](Task task) -> void
-	{ out << &task << std::endl; });
+	std::for_each(tasks.begin(), tasks.end(), [&out](Task* task) -> void
+	{ out << *task << std::endl; });
 	return out.str();
 }
 

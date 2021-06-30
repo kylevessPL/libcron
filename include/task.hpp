@@ -15,6 +15,7 @@ class Task
 	Task(std::vector<std::string> command, Time execution_time, bool rel, Time period_time);
 	void schedule();
 	void cancel();
+	void execute();
 	int get_id();
  private:
 	int id;
@@ -23,7 +24,7 @@ class Task
 	bool rel;
 	std::vector<std::string> command;
 	timer_t timer;
-	static void execute(__sigval_t arg);
+	static void callback(sigval_t arg);
 	std::chrono::time_point<std::chrono::system_clock> last_execution_time;
 	friend std::ostream& operator<<(std::ostream& os, const Task& task);
 };

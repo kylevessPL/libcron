@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 			Client::start(argc, argv);
 		}
 	}
-	catch (std::runtime_error e)
+	catch (std::exception e)
 	{
 		logger.log(Logger::Severity::max, e.what());
 		return EXIT_FAILURE;
